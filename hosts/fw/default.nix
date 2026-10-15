@@ -8,12 +8,15 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ../../common.nix
   ];
 
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = false;
   };
+  services.blueman.enable = true;
+  services.upower.enable = true;
   nix.optimise.automatic = true;
   nix.gc = {
     automatic = true;
@@ -24,6 +27,9 @@
   # Use polkit
   security.polkit.enable = true;
 
+  # Provide fingerprint authentication to PAM clients such as swaylock.
+  services.fprintd.enable = true;
+
   # Store desktop application credentials and unlock them at console login.
   services.gnome.gnome-keyring.enable = true;
   programs.seahorse.enable = true;
@@ -32,8 +38,12 @@
   services.tlp.enable = false;
   services.power-profiles-daemon.enable = true;
 
-  # Allow swaylock to authenticate with the user password.
-  security.pam.services.swaylock = { };
+  # Allow swaylock to authenticate with either a fingerprint or the user password.
+  security.pam.services.swaylock.fprintAuth = true;
+  # Check a typed password before fprintd starts its fingerprint timeout.
+  # Submitting an empty password still falls through to fingerprint verification.
+  security.pam.services.swaylock.rules.auth.unix.order =
+    config.security.pam.services.swaylock.rules.auth.fprintd.order - 1;
 
   environment.variables = {
     EDITOR = "hx";
@@ -70,7 +80,7 @@
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
-    alsa.suppot32Bit = true;
+    alsa.support32Bit = true;
   };
 
   boot.resumeDevice = "/dev/disk/by-uuid/a5dd80ee-c0d0-46d4-9a06-93fd22e2a697";

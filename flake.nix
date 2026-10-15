@@ -12,6 +12,10 @@
       url = "github:NixOS/nixos-hardware";
       inputs.nixpkgs.follows = "unstable";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "unstable";
+    };
   };
 
   outputs =
@@ -20,6 +24,7 @@
       unstable,
       home-manager,
       nixos-hardware,
+      sops-nix,
       ...
     }:
     {
@@ -43,6 +48,7 @@
             ./hosts/fw
             nixos-hardware.nixosModules.framework-13-7040-amd
             home-manager.nixosModules.home-manager
+            sops-nix.nixosModules.sops
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;

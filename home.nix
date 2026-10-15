@@ -29,6 +29,8 @@ in
   # The GTK portal can report success without actually inhibiting idle on Sway.
   home.sessionVariables.MOZ_WAKE_LOCK_TYPE = "WaylandIdleInhibit";
 
+  programs.obsidian.enable = true;
+
   home.pointerCursor = {
     enable = true;
     package = pkgs.adwaita-icon-theme;
@@ -104,6 +106,7 @@ in
         "sway/mode"
       ];
       modules-right = [
+        "backlight"
         "pulseaudio"
         "network"
         "battery"
@@ -254,16 +257,25 @@ in
     profiles.default = {
       enableUpdateCheck = false;
       enableExtensionUpdateCheck = false;
-      extensions = with pkgs.vscode-extensions; [
-        ms-toolsai.jupyter
-        tomoki1207.pdf
-        catppuccin.catppuccin-vsc
-        myriad-dreamin.tinymist
-        ms-python.python
-        ms-python.debugpy
-        ms-python.vscode-pylance
-        jnoortheen.nix-ide
-      ];
+      extensions =
+        (with pkgs.vscode-extensions; [
+          ms-toolsai.jupyter
+          tomoki1207.pdf
+          catppuccin.catppuccin-vsc
+          myriad-dreamin.tinymist
+          ms-python.python
+          ms-python.debugpy
+          ms-python.vscode-pylance
+          jnoortheen.nix-ide
+        ])
+        ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          {
+            publisher = "stmicroelectronics";
+            name = "stm32-vscode-extension";
+            version = "3.11.0";
+            sha256 = "sha256-GNhX9uclUcutozlx68OtlQpKseT00998Rl07ct3KMdA=";
+          }
+        ];
       userSettings = {
         "python.defaultInterpreterPath" = "${pythonEnv}/bin/python3";
         "chat.disableAIFeatures" = true;
