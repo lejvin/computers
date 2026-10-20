@@ -116,6 +116,9 @@ in
         "clock"
         "tray"
       ];
+      backlight = {
+        format = "Brightness {percent}%";
+      };
       pulseaudio = {
         format = "Vol {volume}%";
         format-muted = "Muted";
@@ -267,6 +270,8 @@ in
           ms-python.debugpy
           ms-python.vscode-pylance
           jnoortheen.nix-ide
+          ms-vscode.cpptools-extension-pack
+          ms-vscode.cpptools
         ])
         ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
