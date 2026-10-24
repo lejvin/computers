@@ -69,6 +69,7 @@
   environment.systemPackages = with pkgs; [
     slurp
     elmerfem
+    anki
   ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
