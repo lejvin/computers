@@ -45,21 +45,7 @@
 
   xdg.portal = {
     enable = true;
-    wlr = {
-      enable = true;
-      settings = {
-        screencast = {
-          chooser_type = "simple";
-          chooser_cmd = "${pkgs.slurp}/bin/slurp -f 'Monitor: %o' -or";
-        };
-      };
-    };
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.sway = {
-      default = [ "gtk" ];
-      "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-      "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-    };
   };
 
   programs.gnupg.agent = {
@@ -71,6 +57,7 @@
     elmerfem
     anki
     spotify
+    gparted
   ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

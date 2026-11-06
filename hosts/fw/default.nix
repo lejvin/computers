@@ -2,13 +2,14 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../common.nix
+    ../../plasma.nix
   ];
 
   hardware.bluetooth = {
@@ -27,7 +28,7 @@
   # Use polkit
   security.polkit.enable = true;
 
-  # Provide fingerprint authentication to PAM clients such as swaylock.
+  # Provide fingerprint authentication to PAM clients.
   services.fprintd.enable = true;
 
   # Store desktop application credentials and unlock them at console login.
@@ -38,13 +39,6 @@
   services.tlp.enable = false;
   services.power-profiles-daemon.enable = true;
 
-  # Allow swaylock to authenticate with either a fingerprint or the user password.
-  security.pam.services.swaylock.fprintAuth = true;
-  # Check a typed password before fprintd starts its fingerprint timeout.
-  # Submitting an empty password still falls through to fingerprint verification.
-  security.pam.services.swaylock.rules.auth.unix.order =
-    config.security.pam.services.swaylock.rules.auth.fprintd.order - 1;
-
   environment.variables = {
     EDITOR = "hx";
     VISUAL = "hx";
@@ -53,25 +47,6 @@
   programs.dconf.enable = true;
   programs.thunar.enable = true;
 
-  # Expose the desktop appearance preference to portal-aware applications.
-  xdg.portal = {
-    enable = true;
-    wlr = {
-      enable = true;
-      settings = {
-        screencast = {
-          chooser_type = "simple";
-          chooser_cmd = "${pkgs.slurp}/bin/slurp -f 'Monitor: %o' -or";
-        };
-      };
-    };
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.sway = {
-      default = [ "gtk" ];
-      "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-      "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-    };
-  };
   services.dbus.enable = true;
   # Enable pipewire
   security.rtkit.enable = true;

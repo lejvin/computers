@@ -56,7 +56,13 @@
   # Expose the desktop appearance preference to portal-aware applications.
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
+    wlr = {
+      enable = true;
+      settings.screencast = {
+        chooser_type = "simple";
+        chooser_cmd = "${pkgs.slurp}/bin/slurp -f 'Monitor: %o' -or";
+      };
+    };
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.sway = {
       default = [ "gtk" ];
