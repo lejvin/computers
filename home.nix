@@ -166,6 +166,9 @@ in
     '';
   };
 
+  # Let the compositor come back before retrying if Waybar loses its display.
+  systemd.user.services.waybar.Service.RestartSec = "5s";
+
   programs.foot = {
     enable = true;
     settings = {
@@ -346,6 +349,8 @@ in
     };
   };
   home.packages = with pkgs; [
+    gparted
+    teams-for-linux
     gimp
     nextcloud-client
     qbittorrent
@@ -362,6 +367,7 @@ in
     freecad
     gmsh
     netgen
+    prusa-slicer
   ];
 
   home.stateVersion = "26.05";
