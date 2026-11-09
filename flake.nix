@@ -3,15 +3,19 @@
 
   inputs = {
     stable.url = "github:nixos/nixpkgs/nixos-26.05";
+
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
+
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware";
       inputs.nixpkgs.follows = "unstable";
     };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "unstable";
@@ -47,6 +51,7 @@
           ];
         };
 
+        # Framework laptop 13 Config
         fw = unstable.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -58,7 +63,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.lukas = {
-                imports = [ ./home.nix ];
+                imports = [ ./home/home.nix ];
               };
             }
           ];
