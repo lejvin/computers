@@ -190,6 +190,7 @@
     wget
     git
     brightnessctl
+    zoom-us
   ];
 
   programs.steam.enable = true;

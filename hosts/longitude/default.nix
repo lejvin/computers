@@ -193,6 +193,7 @@
     brightnessctl
     yt-dlp
     ffmpeg
+    zoom-us
   ];
 
   programs.steam.enable = true;
