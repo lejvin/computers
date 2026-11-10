@@ -3,16 +3,15 @@
 
   inputs = {
     stable.url = "github:nixos/nixpkgs/nixos-26.05";
-
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "unstable";
-    };
 
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "unstable";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
 
@@ -27,75 +26,46 @@
       self,
       stable,
       unstable,
-      home-manager,
-      nixos-hardware,
       sops-nix,
+      nixos-hardware,
       ...
-    }:
+    }@inputs:
+    let
+      mkHost =
+        {
+          name,
+          nixpkgs ? unstable,
+          modules ? [ ],
+        }:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs self;
+            flakeRoot = self.outPath;
+          };
+          modules = [ ./hosts/${name} ] ++ modules;
+        };
+    in
     {
       nixosConfigurations = {
-        longitude = unstable.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/longitude
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.lukas = {
-                imports = [
-                  ./users/lukas/home.nix
-                ];
-              };
-            }
-          ];
+        longitude = mkHost {
+          name = "longitude";
+          modules = [ ./modules/home-manager ];
         };
-
-        # Framework laptop 13 Config
-        fw = unstable.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs.flakeRoot = self.outPath;
+        arnold = mkHost {
+          name = "arnold";
+          modules = [ ./modules/home-manager ];
+        };
+        fw = mkHost {
+          name = "fw";
           modules = [
-            ./hosts/fw
-            nixos-hardware.nixosModules.framework-13-7040-amd
-            home-manager.nixosModules.home-manager
+            ./modules/home-manager
             sops-nix.nixosModules.sops
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.users.lukas = {
-                imports = [
-                  ./users/lukas/home.nix
-                ];
-              };
-            }
+            nixos-hardware.nixosModules.framework-13-7040-amd
           ];
         };
-
-        fractal = stable.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/fractal
-          ];
-        };
-
-        arnold = unstable.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/arnold
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.lukas = {
-                imports = [
-                  ./users/lukas/home.nix
-
-                ];
-              };
-            }
-          ];
+        fractal = mkHost {
+          name = "fractal";
+          nixpkgs = stable;
         };
       };
     };
