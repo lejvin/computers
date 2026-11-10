@@ -11,6 +11,12 @@
     ../../common.nix
   ];
 
+  # Enable the use of flakes
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = false;
@@ -50,13 +56,7 @@
   # Expose the desktop appearance preference to portal-aware applications.
   xdg.portal = {
     enable = true;
-    wlr = {
-      enable = true;
-      settings.screencast = {
-        chooser_type = "simple";
-        chooser_cmd = "${pkgs.slurp}/bin/slurp -f 'Monitor: %o' -or";
-      };
-    };
+    wlr.enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.sway = {
       default = [ "gtk" ];
@@ -133,6 +133,24 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+
+  # Set your time zone.
+  time.timeZone = "Europe/Stockholm";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "sv_SE.UTF-8";
+    LC_IDENTIFICATION = "sv_SE.UTF-8";
+    LC_MEASUREMENT = "sv_SE.UTF-8";
+    LC_MONETARY = "sv_SE.UTF-8";
+    LC_NAME = "sv_SE.UTF-8";
+    LC_NUMERIC = "sv_SE.UTF-8";
+    LC_PAPER = "sv_SE.UTF-8";
+    LC_TELEPHONE = "sv_SE.UTF-8";
+    LC_TIME = "sv_SE.UTF-8";
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {

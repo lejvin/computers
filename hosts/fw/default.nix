@@ -2,14 +2,14 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ pkgs, ... }:
+{ flakeRoot, pkgs, ... }:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ../../common.nix
-    ../../plasma.nix
+    (flakeRoot + "/modules/common")
+    (flakeRoot + "/modules/plasma")
   ];
 
   hardware.bluetooth = {
@@ -139,8 +139,6 @@
 
   # Configure console keymap
   console.keyMap = "sv-latin1";
-
-
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

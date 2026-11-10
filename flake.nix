@@ -24,6 +24,7 @@
 
   outputs =
     {
+      self,
       stable,
       unstable,
       home-manager,
@@ -54,6 +55,7 @@
         # Framework laptop 13 Config
         fw = unstable.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs.flakeRoot = self.outPath;
           modules = [
             ./hosts/fw
             nixos-hardware.nixosModules.framework-13-7040-amd
@@ -63,7 +65,9 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.lukas = {
-                imports = [ ./home/home.nix ];
+                imports = [
+                  ./users/lukas/home.nix
+                ];
               };
             }
           ];
@@ -86,7 +90,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.lukas = {
                 imports = [
-                  ./home.nix
+                  ./users/lukas/home.nix
 
                 ];
               };
