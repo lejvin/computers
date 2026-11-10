@@ -18,7 +18,7 @@ in
 {
 
   imports = [
-    ./thunderbird.nix
+    ../../home/thunderbird
   ];
 
   home.username = "lukas";

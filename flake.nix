@@ -44,8 +44,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.lukas = {
                 imports = [
-                  ./home.nix
-                  ./sway.nix
+                  ./users/lukas/home.nix
                 ];
               };
             }
@@ -64,6 +63,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
               home-manager.users.lukas = {
                 imports = [
                   ./users/lukas/home.nix
